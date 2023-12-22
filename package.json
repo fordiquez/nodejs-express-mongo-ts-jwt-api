@@ -1,0 +1,35 @@
+{
+  "name": "easy-eat-backend",
+  "version": "1.0.0",
+  "description": "EasyEat Backend API",
+  "main": "src/main.ts",
+  "scripts": {
+    "dev": "npx nodemon",
+    "start": "npm run build && node build/main",
+    "build": "rimraf ./build && npx tsc",
+    "lint": "npx eslint ./src",
+    "format": "npx eslint ./src --fix",
+    "prettier": "prettier --write **/*.{js,jsx,ts,tsx,css,md,json,scss} --config ./.prettierrc"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.15.0",
+    "eslint": "^8.56.0",
+    "husky": "^8.0.3",
+    "nodemon": "^3.0.2",
+    "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  }
+}
