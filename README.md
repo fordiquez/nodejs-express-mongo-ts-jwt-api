@@ -1,4 +1,4 @@
-# EasyEat API
+# EasyEat API with TypeScript
 
 - NodeJS;
 - Express;
