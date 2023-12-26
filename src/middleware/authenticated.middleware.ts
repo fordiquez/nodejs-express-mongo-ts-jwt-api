@@ -1,39 +1,37 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import token from '../utils/token.js';
+import { Response, NextFunction } from 'express';
+import jsonwebtoken from 'jsonwebtoken';
 import UserModel from '../modules/user/user.model.js';
-import Token from '../utils/interfaces/token.interface.js';
+import jwt from '../utils/jwt.js';
 import HttpException from '../utils/http.exception.js';
+import AuthenticatedRequest from '../utils/interfaces/authenticated.request.interface.js';
+import Token from '../utils/interfaces/token.interface.js';
 
 export default async function authenticatedMiddleware(
-  req: Request,
+  req: AuthenticatedRequest,
   _res: Response,
   next: NextFunction,
 ): Promise<Response | void> {
-  const bearer = req.headers.authorization;
+  const accessToken = jwt.getToken(req);
 
-  if (!bearer || !bearer.startsWith('Bearer ')) {
-    return next(new HttpException(401, 'Unauthorised'));
+  if (!accessToken) {
+    return next(new HttpException(401, 'Unauthorized'));
   }
 
-  const accessToken = bearer.split('Bearer ')[1].trim();
   try {
-    const payload: Token | jwt.JsonWebTokenError = await token.verifyToken(accessToken);
+    const payload: Token | jsonwebtoken.JsonWebTokenError = await jwt.verifyToken(accessToken);
 
-    if (payload instanceof jwt.JsonWebTokenError) {
-      return next(new HttpException(401, 'Unauthorised'));
+    if (!(payload instanceof jsonwebtoken.JsonWebTokenError)) {
+      const user = await UserModel.findById(payload.id).exec();
+
+      if (!user) {
+        return next(new HttpException(401, 'Unauthorized'));
+      }
+
+      req.user = user;
     }
-
-    const user = await UserModel.findById(payload.id).select('-password').exec();
-
-    if (!user) {
-      return next(new HttpException(401, 'Unauthorised'));
-    }
-
-    req.user = user;
 
     return next();
   } catch (error) {
-    return next(new HttpException(401, 'Unauthorised'));
+    return next(new HttpException(401, 'Unauthorized'));
   }
 }

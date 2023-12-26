@@ -1,7 +1,7 @@
 {
-  "name": "easy-eat-backend",
+  "name": "nodejs-express-mongodb-ts-jwt-api",
   "version": "1.0.0",
-  "description": "EasyEat Backend API",
+  "description": "Node.js + Express + MongoDB + TypeScript + JWT API",
   "main": "src/index.ts",
   "scripts": {
     "dev": "npx nodemon",
@@ -13,7 +13,7 @@
   },
   "type": "module",
   "keywords": [],
-  "author": "",
+  "author": "Ruslan Tsiapko",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -28,6 +28,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
     "morgan": "^1.10.0",
+    "nodemailer": "^6.9.7",
     "winston": "^3.11.0"
   },
   "devDependencies": {
@@ -40,6 +41,7 @@
     "@types/jsonwebtoken": "^9.0.5",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.10.5",
+    "@types/nodemailer": "^6.4.14",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "eslint": "^8.56.0",

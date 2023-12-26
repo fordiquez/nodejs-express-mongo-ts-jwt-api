@@ -6,8 +6,8 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import ErrorMiddleware from './middleware/error.middleware.js';
-import Controller from './utils/interfaces/controller.interface.js';
 import logger from './utils/logger.js';
+import Controller from './utils/interfaces/controller.interface.js';
 
 export default class App {
   public express: Application;
