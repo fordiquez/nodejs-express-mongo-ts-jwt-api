@@ -7,31 +7,31 @@ import AuthenticatedRequest from '../utils/interfaces/authenticated.request.inte
 import Token from '../utils/interfaces/token.interface.js';
 
 export default async function authenticatedMiddleware(
-  req: AuthenticatedRequest,
-  _res: Response,
-  next: NextFunction,
+    req: AuthenticatedRequest,
+    _res: Response,
+    next: NextFunction,
 ): Promise<Response | void> {
-  const accessToken = jwt.getToken(req);
+    const accessToken = jwt.getToken(req);
 
-  if (!accessToken) {
-    return next(new HttpException(401, 'Unauthorized'));
-  }
-
-  try {
-    const payload: Token | jsonwebtoken.JsonWebTokenError = await jwt.verifyToken(accessToken);
-
-    if (!(payload instanceof jsonwebtoken.JsonWebTokenError)) {
-      const user = await UserModel.findById(payload.id).exec();
-
-      if (!user) {
+    if (!accessToken) {
         return next(new HttpException(401, 'Unauthorized'));
-      }
-
-      req.user = user;
     }
 
-    return next();
-  } catch (error) {
-    return next(new HttpException(401, 'Unauthorized'));
-  }
+    try {
+        const payload: Token | jsonwebtoken.JsonWebTokenError = await jwt.verifyToken(accessToken);
+
+        if (!(payload instanceof jsonwebtoken.JsonWebTokenError)) {
+            const user = await UserModel.findById(payload.id).exec();
+
+            if (!user) {
+                return next(new HttpException(401, 'Unauthorized'));
+            }
+
+            req.user = user;
+        }
+
+        return next();
+    } catch (error) {
+        return next(new HttpException(401, 'Unauthorized'));
+    }
 }

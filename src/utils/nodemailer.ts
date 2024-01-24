@@ -2,53 +2,53 @@ import { createTransport, SentMessageInfo, Transporter } from 'nodemailer';
 import validateEnv from './validateEnv.js';
 
 export default class Nodemailer {
-  private transporter: Transporter<SentMessageInfo>;
-  private appName = 'Nodemailer';
-  private appUrl: string | undefined;
+    private transporter: Transporter<SentMessageInfo>;
+    private appName = 'Nodemailer';
+    private appUrl: string | undefined;
 
-  constructor() {
-    const { MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD } = validateEnv();
+    constructor() {
+        const { MAIL_HOST, MAIL_PORT, MAIL_USERNAME, MAIL_PASSWORD } = validateEnv();
 
-    this.transporter = createTransport({
-      host: MAIL_HOST,
-      port: MAIL_PORT,
-      auth: {
-        user: MAIL_USERNAME,
-        pass: MAIL_PASSWORD,
-      },
-    });
-  }
+        this.transporter = createTransport({
+            host: MAIL_HOST,
+            port: MAIL_PORT,
+            auth: {
+                user: MAIL_USERNAME,
+                pass: MAIL_PASSWORD,
+            },
+        });
+    }
 
-  private sendMail = async (
-    to: string,
-    subject: string,
-    subtitle: string,
-    message: string | null = null,
-    from: string | null = null,
-  ): Promise<void> => {
-    const { MAIL_FROM_ADDRESS } = validateEnv();
+    private sendMail = async (
+        to: string,
+        subject: string,
+        subtitle: string,
+        message: string | null = null,
+        from: string | null = null,
+    ): Promise<void> => {
+        const { MAIL_FROM_ADDRESS } = validateEnv();
 
-    const html = this.layout(subject, subtitle, message);
+        const html = this.layout(subject, subtitle, message);
 
-    await this.transporter.sendMail({ to, from: from ?? MAIL_FROM_ADDRESS, subject, html });
-  };
+        await this.transporter.sendMail({ to, from: from ?? MAIL_FROM_ADDRESS, subject, html });
+    };
 
-  public sendResetPasswordMail = async (email: string, token: string, origin: string | undefined): Promise<void> => {
-    this.appUrl = origin;
-    const subtitle = origin
-      ? 'Please click the below link to reset your password. The link will be valid for 1 day'
-      : `Please use the below token to reset your password with the <code>/reset-password</code> api route`;
-    const url = `${origin}/auth/reset-password?token=${token}`;
-    const resetPasswordLink = `<div style="text-align: center; margin: 20px 0">
+    public sendResetPasswordMail = async (email: string, token: string, origin: string | undefined): Promise<void> => {
+        this.appUrl = origin;
+        const subtitle = origin
+            ? 'Please click the below link to reset your password. The link will be valid for 1 day'
+            : `Please use the below token to reset your password with the <code>/reset-password</code> api route`;
+        const url = `${origin}/auth/reset-password?token=${token}`;
+        const resetPasswordLink = `<div style="text-align: center; margin: 20px 0">
               <a href="${url}" target="_blank" style="display: inline-block; padding: 10px 15px; font-size: 14px; border-radius: 50px; color: #003737; background: #0feb73; text-transform: uppercase; text-decoration: none; font-weight: bold">
                 Reset Password
               </a>
           </div>`;
-    const message = origin ? resetPasswordLink : `<code style="word-break: break-all">${token}</code>`;
-    await this.sendMail(email, 'Reset Password', subtitle, message);
-  };
+        const message = origin ? resetPasswordLink : `<code style="word-break: break-all">${token}</code>`;
+        await this.sendMail(email, 'Reset Password', subtitle, message);
+    };
 
-  private styles = (): string => `@media only screen and (max-width: 600px) {
+    private styles = (): string => `@media only screen and (max-width: 600px) {
 .inner-body {
 width: 100% !important;
 }
@@ -355,8 +355,8 @@ img {
 }
 `;
 
-  private layout = (title: string, subtitle: string, message: string | null): string => {
-    return `<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    private layout = (title: string, subtitle: string, message: string | null): string => {
+        return `<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
 <title>${this.appName}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -374,11 +374,11 @@ img {
 <tbody><tr>
 <td class="header" style="padding: 25px 0; text-align: center;">
 ${
-  this.appUrl
-    ? `<a target="_blank" rel="noopener noreferrer" href="${this.appUrl}" style="color: #3d4852; font-size: 19px; font-weight: bold; text-decoration: none; display: inline-block;">
+    this.appUrl
+        ? `<a target="_blank" rel="noopener noreferrer" href="${this.appUrl}" style="color: #3d4852; font-size: 19px; font-weight: bold; text-decoration: none; display: inline-block;">
 ${this.appName}
 </a>`
-    : ''
+        : ''
 }
 </td>
 </tr>
@@ -394,8 +394,8 @@ ${this.appName}
 <h2 style="font-size: 16px; font-weight: bold; margin-top: 0; text-align: left;">${subtitle}</h2>
 ${message ? `<p style="font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;">${message}</p>` : ''}
 <p style="font-size: 16px; line-height: 1.5em; margin-top: 0; text-align: left;"><em>Best regards,<br>${
-      this.appName
-    }</em></p>
+            this.appName
+        }</em></p>
 </td>
 </tr>
 </tbody>
@@ -409,8 +409,8 @@ ${message ? `<p style="font-size: 16px; line-height: 1.5em; margin-top: 0; text-
 <tbody><tr>
 <td class="content-cell" align="center" style="max-width: 100vw; padding: 32px;">
 <p style="line-height: 1.5em; margin-top: 0; color: #b0adc5; font-size: 12px; text-align: center;">© ${new Date().getFullYear()} ${
-      this.appName
-    }. All rights reserved.</p>
+            this.appName
+        }. All rights reserved.</p>
 
 </td>
 </tr>
@@ -423,5 +423,5 @@ ${message ? `<p style="font-size: 16px; line-height: 1.5em; margin-top: 0; text-
 </tbody></table>
 
 </body></html>`;
-  };
+    };
 }
